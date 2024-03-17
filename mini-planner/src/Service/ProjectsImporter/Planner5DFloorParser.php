@@ -137,6 +137,10 @@ class Planner5DFloorParser implements FloorPlansParserInterface
     {
         $floor = null;
 
+        if (!isset($projectData['items'][0]['data']['items'])) {
+            throw new \RuntimeException('Floor not found');
+        }
+
         foreach ($projectData['items'][0]['data']['items'] as $item) {
             if ($item['className'] === 'Floor') {
                 $floor = $item;
@@ -154,6 +158,10 @@ class Planner5DFloorParser implements FloorPlansParserInterface
     private function getRooms(array $floor): array
     {
         $rooms = [];
+
+        if (!isset($floor['items'])) {
+            return $rooms;
+        }
 
         foreach ($floor['items'] as $item) {
             if ($item['className'] === 'Room') {

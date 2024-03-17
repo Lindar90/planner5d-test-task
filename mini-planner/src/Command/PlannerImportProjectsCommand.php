@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Service\ProjectsImporter\ProjectsImportManager;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -42,7 +43,12 @@ class PlannerImportProjectsCommand extends Command
 
         $pagesLimit = (int) $input->getOption('numberOfPages');
 
-        $this->projectImportManager->importProjects($pagesLimit);
+        try {
+            $this->projectImportManager->importProjects($pagesLimit);
+        } catch (Exception $e) {
+            $io->error('An error occurred while importing projects: ' . $e->getMessage());
+            return Command::FAILURE;
+        }
 
         $io->success('Projects imported successfully.');
 
